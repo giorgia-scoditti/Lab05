@@ -36,7 +36,24 @@ def main(page: ft.Page):
     lista_strumenti = ft.ListView(expand=True, spacing=5, padding=10, auto_scroll=True)
 
     # Tutti i TextField per le info necessarie per aggiungere un nuovo strumento (tipo, marca, anno, contatore posti)
-    # TODO
+    # Creo i campi per il nuovo strumento
+    txt_tipo = ft.TextField(label = "Tipo")
+    txt_marca = ft.TextField(label = "Marca")
+    txt_anno = ft.TextField(label = "Anno acquisto")
+    valore_strumento = 0
+    txt_valore = ft.Text(value = f"{valore_strumento} euro")
+    pulsante_più = ft.IconButton(icon = ft.Icons.ADD, on_click = incrementa_valore)
+    pulsante_meno = ft.IconButton(icon = ft.Icons.REMOVE)
+    def incrementa_valore(e):
+        txt_valore.value = f"{int(txt_valore.value.split()[0]) + 100} euro"
+        page.update()
+    def decrementa_valore(e):
+        valore = int(txt_valore.value.split()[0])
+        if valore >= 100:
+            txt_valore.value = f"{valore - 100} euro"
+        page.update()
+    # SISTEMA!
+
 
     # --- FUNZIONI APP ---
     def aggiorna_lista_strumenti():
@@ -83,7 +100,11 @@ def main(page: ft.Page):
                alignment=ft.MainAxisAlignment.CENTER),
 
         # Sezione 3
-        # TODO
+        ft.Text("Aggiungi nuovo strumento", size = 20),
+        ft.Row(spacing = 200,
+               controls = [input_tipo],
+               alignment = ft.MainAxisAlignment. CENTER),
+        # SISTEMA!
 
         # Sezione 4
         ft.Divider(),
