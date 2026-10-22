@@ -40,18 +40,8 @@ def main(page: ft.Page):
     txt_tipo = ft.TextField(label = "Tipo")
     txt_marca = ft.TextField(label = "Marca")
     txt_anno = ft.TextField(label = "Anno acquisto")
-    valore_strumento = 0
-    txt_valore = ft.Text(value = f"{valore_strumento} euro")
-    pulsante_più = ft.IconButton(icon = ft.Icons.ADD, on_click = incrementa_valore)
-    pulsante_meno = ft.IconButton(icon = ft.Icons.REMOVE)
-    def incrementa_valore(e):
-        txt_valore.value = f"{int(txt_valore.value.split()[0]) + 100} euro"
-        page.update()
-    def decrementa_valore(e):
-        valore = int(txt_valore.value.split()[0])
-        if valore >= 100:
-            txt_valore.value = f"{valore - 100} euro"
-        page.update()
+    txt_valore = ft.TextField(value = "0", disabled = True, width = 100, text_size = 20, text_align = ft.TextAlign.CENTER)
+
     # SISTEMA!
 
 
@@ -75,14 +65,32 @@ def main(page: ft.Page):
         page.update()
 
     # Handlers per la gestione dei pulsanti utili all'inserimento di un nuovo strumento
-    # TODO
+    def handler_minus(e):
+        try:
+            v = int(txt_valore.value)
+        except ValueError:
+            v = 0
+            if v > 0:
+                v = v - 1
+                txt_valore.value = str(v)
+                txt_valore.update()
+
+    def handler_plus(e):
+        print("-")
+        v = int(txt_valore.value)
+        v = v + 1
+        txt_valore.value = v
+        txt_valore.update()
+    # SISTEMA!
 
     # --- EVENTI ---
     toggle_cambia_tema = ft.Switch(label="Tema scuro", value=True, on_change=cambia_tema)
     pulsante_conferma_responsabile = ft.ElevatedButton("Conferma", on_click=conferma_responsabile)
+    pulsante_aggiungi_strumento = ft.ElevatedButton("Aggiungi strumento", on_click=aggiungi_strumento_click)
 
     # Pulsanti per la gestione dell'inserimento di un nuovo strumento
-    # TODO
+    pulsante_meno = ft.IconButton(icon=ft.Icons.REMOVE, icon_color="red", on_click=handler_minus)
+    pulsante_più = ft.IconButton(icon=ft.Icons.ADD, icon_color="green", on_click= handler_plus)
 
     # --- LAYOUT ---
     page.add(
@@ -101,10 +109,10 @@ def main(page: ft.Page):
 
         # Sezione 3
         ft.Text("Aggiungi nuovo strumento", size = 20),
-        ft.Row(spacing = 200,
-               controls = [input_tipo],
+        ft.Row(spacing = 20,
+               controls = [txt_tipo, txt_marca, txt_anno, pulsante_meno, my_text, pulsante_più],
                alignment = ft.MainAxisAlignment. CENTER),
-        # SISTEMA!
+        ft.Row(controls = [pulsante_aggiungi_strumento], alignment = ft.MainAxisAlignment.CENTER),
 
         # Sezione 4
         ft.Divider(),
