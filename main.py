@@ -42,9 +42,6 @@ def main(page: ft.Page):
     txt_anno = ft.TextField(label = "Anno acquisto")
     txt_valore = ft.TextField(value = "0", disabled = True, width = 100, text_size = 20, text_align = ft.TextAlign.CENTER)
 
-    # SISTEMA!
-
-
     # --- FUNZIONI APP ---
     def aggiorna_lista_strumenti():
         lista_strumenti.controls.clear()
@@ -70,23 +67,46 @@ def main(page: ft.Page):
             v = int(txt_valore.value)
         except ValueError:
             v = 0
-            if v > 0:
-                v = v - 1
-                txt_valore.value = str(v)
-                txt_valore.update()
+        if v > 0:
+            v = v - 1
+            txt_valore.value = str(v)
+            txt_valore.update()
 
     def handler_plus(e):
-        print("-")
-        v = int(txt_valore.value)
-        v = v + 1
-        txt_valore.value = v
-        txt_valore.update()
-    # SISTEMA!
+        try:
+            v = int(txt_valore.value)
+        except ValueError:
+            v = 0
+        if v > 0:
+            v = v + 1
+            txt_valore.value = str(v)
+            txt_valore.update()
+
+    def aggiungi_strumento_on_click(e):
+       try:
+           tipo = txt_tipo.value()
+           marca = txt_marca.value()
+           if not tipo or not marca:
+               alert.show_alert("❌ I campi Tipo e Marca sono obbligatori.")
+               return
+           anno = int(txt_anno.value())
+           valore = float(txt_valore.value())
+           deposito.aggiungi_strumento(tipo, marca, anno, valore)
+           txt_tipo.value = ""
+           txt_marca.value= ""
+           txt_anno.value = ""
+           txt_valore.value = "0"
+           aggiorna_lista_strumenti()
+           page.update()
+       except ValueError:
+           alert.show_alert("❌ Anno e Valore devono essere valori numrici validi!")
+       except Exception as ex:
+           alert.show_alert(f"❌ Errore: {ex}")
 
     # --- EVENTI ---
     toggle_cambia_tema = ft.Switch(label="Tema scuro", value=True, on_change=cambia_tema)
     pulsante_conferma_responsabile = ft.ElevatedButton("Conferma", on_click=conferma_responsabile)
-    pulsante_aggiungi_strumento = ft.ElevatedButton("Aggiungi strumento", on_click=aggiungi_strumento_click)
+    pulsante_aggiungi_strumento = ft.ElevatedButton("Aggiungi strumento", on_click=aggiungi_strumento_on_click)
 
     # Pulsanti per la gestione dell'inserimento di un nuovo strumento
     pulsante_meno = ft.IconButton(icon=ft.Icons.REMOVE, icon_color="red", on_click=handler_minus)
@@ -110,7 +130,7 @@ def main(page: ft.Page):
         # Sezione 3
         ft.Text("Aggiungi nuovo strumento", size = 20),
         ft.Row(spacing = 20,
-               controls = [txt_tipo, txt_marca, txt_anno, pulsante_meno, my_text, pulsante_più],
+               controls = [txt_tipo, txt_marca, txt_anno, pulsante_meno, txt_valore, pulsante_più],
                alignment = ft.MainAxisAlignment. CENTER),
         ft.Row(controls = [pulsante_aggiungi_strumento], alignment = ft.MainAxisAlignment.CENTER),
 
