@@ -69,28 +69,27 @@ def main(page: ft.Page):
             v = 0
         if v > 0:
             v = v - 1
-            txt_valore.value = str(v)
-            txt_valore.update()
+        txt_valore.value = str(v)
+        txt_valore.update()
 
     def handler_plus(e):
         try:
             v = int(txt_valore.value)
         except ValueError:
             v = 0
-        if v > 0:
-            v = v + 1
-            txt_valore.value = str(v)
-            txt_valore.update()
+        v = v + 1
+        txt_valore.value = str(v)
+        txt_valore.update()
 
     def aggiungi_strumento_on_click(e):
        try:
-           tipo = txt_tipo.value()
-           marca = txt_marca.value()
+           tipo = txt_tipo.value
+           marca = txt_marca.value
            if not tipo or not marca:
                alert.show_alert("❌ I campi Tipo e Marca sono obbligatori.")
                return
-           anno = int(txt_anno.value())
-           valore = float(txt_valore.value())
+           anno = int(txt_anno.value)
+           valore = float(txt_valore.value)
            deposito.aggiungi_strumento(tipo, marca, anno, valore)
            txt_tipo.value = ""
            txt_marca.value= ""
@@ -99,14 +98,14 @@ def main(page: ft.Page):
            aggiorna_lista_strumenti()
            page.update()
        except ValueError:
-           alert.show_alert("❌ Anno e Valore devono essere valori numrici validi!")
+           alert.show_alert("❌ Anno e Valore devono essere valori numerici validi!")
        except Exception as ex:
            alert.show_alert(f"❌ Errore: {ex}")
 
     # --- EVENTI ---
     toggle_cambia_tema = ft.Switch(label="Tema scuro", value=True, on_change=cambia_tema)
-    pulsante_conferma_responsabile = ft.ElevatedButton("Conferma", on_click=conferma_responsabile)
-    pulsante_aggiungi_strumento = ft.ElevatedButton("Aggiungi strumento", on_click=aggiungi_strumento_on_click)
+    pulsante_conferma_responsabile = ft.Button("Conferma", on_click=conferma_responsabile)
+    pulsante_aggiungi_strumento = ft.Button("Aggiungi strumento", on_click=aggiungi_strumento_on_click)
 
     # Pulsanti per la gestione dell'inserimento di un nuovo strumento
     pulsante_meno = ft.IconButton(icon=ft.Icons.REMOVE, icon_color="red", on_click=handler_minus)
@@ -114,7 +113,8 @@ def main(page: ft.Page):
 
     # --- LAYOUT ---
     page.add(
-        toggle_cambia_tema,
+        ft.Row(controls = [toggle_cambia_tema],
+               alignment = ft.MainAxisAlignment.START),
 
         # Sezione 1
         txt_titolo,
@@ -141,4 +141,4 @@ def main(page: ft.Page):
     )
     aggiorna_lista_strumenti()
 
-ft.app(target=main)
+ft.run(main)
